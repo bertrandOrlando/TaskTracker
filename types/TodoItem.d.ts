@@ -1,5 +1,8 @@
 type TodoItem = {
-  id?: number;
+  id: number;
+} & bodyTodoItem;
+
+type bodyTodoItem = {
   task: string;
   description: string;
   category: string;

@@ -1,118 +1,106 @@
 import Todo from "@/component/Todo";
+import TodoList from "@/component/TodoList";
 import axios from "axios";
 import { GetServerSideProps } from "next";
-import connection from "../../db";
+import { useState } from "react";
 
 export default function Home({ data }: { data: TodoItem[] }) {
-  const todoItems: TodoItem[] = data;
-  // const todoItems: TodoItem[] = [
-  //   {
-  //     id: 1,
-  //     task: "Complete project proposal",
-  //     description: "Write and finalize project proposal document.",
-  //     category: "Work",
-  //     dateTime: "2023-08-18 14:00",
-  //     priority: "High",
-  //     fullfilment: 0,
-  //   },
-  //   {
-  //     id: 2,
-  //     task: "Grocery shopping",
-  //     description: "Buy groceries for the week.",
-  //     category: "Personal",
-  //     dateTime: "2023-08-19 10:30",
-  //     priority: "Low",
-  //     fullfilment: 100,
-  //   },
-  //   {
-  //     id: 3,
-  //     task: "Complete project proposal",
-  //     description: "Write and finalize project proposal document.",
-  //     category: "Work",
-  //     dateTime: "2023-08-18 14:00",
-  //     priority: "High",
-  //     fullfilment: 0,
-  //   },
-  //   {
-  //     id: 4,
-  //     task: "Grocery shopping",
-  //     description: "Buy groceries for the week.",
-  //     category: "Personal",
-  //     dateTime: "2023-08-19 10:30",
-  //     priority: "Low",
-  //     fullfilment: 0,
-  //   },
-  //   {
-  //     id: 5,
-  //     task: "Complete project proposal",
-  //     description: "Write and finalize project proposal document.",
-  //     category: "Work",
-  //     dateTime: "2023-08-18 14:00",
-  //     priority: "High",
-  //     fullfilment: 0,
-  //   },
-  //   {
-  //     id: 6,
-  //     task: "Grocery shopping",
-  //     description: "Buy groceries for the week.",
-  //     category: "Personal",
-  //     dateTime: "2023-08-19 10:30",
-  //     priority: "Low",
-  //     fullfilment: 0,
-  //   },
-  // ];
+  const [todoItems, setTodoItems] = useState<TodoItem[]>(data);
+  const [filter, setFilter] = useState("all");
 
+  const filterAll = async () => {
+    setFilter("all");
+    const data = await axios
+      .get(`http://localhost:3000/api/todos`)
+      .then((response) => response.data);
+    setTodoItems(data);
+  };
+  const filterTodo = async () => {
+    setFilter("todo");
+    const data = await axios
+      .get(`http://localhost:3000/api/todos?filter=todo`)
+      .then((response) => response.data);
+    setTodoItems(data);
+  };
+  const filterCompleted = async () => {
+    setFilter("completed");
+    const data = await axios
+      .get(`http://localhost:3000/api/todos?filter=completed`)
+      .then((response) => response.data);
+    setTodoItems(data);
+  };
+  const removeTodo = async (id: number) => {
+    await axios.delete(`http://localhost:3000/api/todos/${id}`);
+    renderTodo();
+  };
+  const updateTodo = async (id: number, todoData: bodyTodoItem) => {
+    await axios.put(`http://localhost:3000/api/todos/${id}`, { ...todoData });
+    renderTodo();
+  };
+  const renderTodo = () => {
+    switch (filter) {
+      case "all":
+        filterAll();
+        break;
+      case "todo":
+        filterTodo();
+        break;
+      case "completed":
+        filterCompleted();
+        break;
+      default:
+        break;
+    }
+  };
   return (
-    <div className="w-full h-screen bg-gradient-to-r from-homeBg-0 to-homeBg-1 flex justify-center items-center ">
-      <div className="bg-white bg-opacity-50 max-w-screen-lg w-full h-5/6 rounded-2xl px-12 py-8 flex flex-col items-center">
-        <h1 className="font-bold text-4xl bg-gradient-to-r from-cyan-500 to-teal-700 text-transparent bg-clip-text">
+    <div className="flex h-screen w-full items-center justify-center bg-background">
+      <div className="flex h-5/6 w-full max-w-screen-lg flex-col items-center rounded-2xl bg-primary bg-opacity-50 from-primary px-12 py-8">
+        <h1 className="bg-gradient-to-r from-primary to-accent bg-clip-text text-4xl font-bold text-transparent">
           My To-Do-Lists
         </h1>
-        <section className="w-full flex flex-col justify-between ">
-          <div className="py-8 flex justify-stretch gap-20">
-            <button className="bg-white w-full text-black text-lg py-3 rounded-2xl transition hover:scale-105">
+        <section className="flex h-full w-full flex-col justify-between overflow-hidden">
+          <div className="flex justify-stretch gap-20 p-8">
+            <button className="w-full rounded-2xl bg-white py-3 text-lg text-black transition hover:scale-105">
               Add a new to-do
             </button>
-            <div className="flex justify-stretch gap-5 w-full">
-              <button className="bg-white w-full text-black text-lg py-3 rounded-2xl transition hover:scale-105">
+            <div className="flex w-full justify-stretch gap-5">
+              <button
+                className={`${
+                  filter === "all"
+                    ? "bg-indigo-700 font-bold text-white"
+                    : "bg-white text-black"
+                } w-full  rounded-2xl py-3 text-lg transition hover:scale-105`}
+                onClick={filterAll}
+              >
                 All
               </button>
-              <button className="bg-white w-full text-black text-lg py-3 rounded-2xl transition hover:scale-105">
-                To-do
+              <button
+                className={`${
+                  filter === "todo"
+                    ? "bg-indigo-700 font-bold text-white"
+                    : "bg-white text-black"
+                } w-full  rounded-2xl py-3 text-lg transition hover:scale-105`}
+                onClick={filterTodo}
+              >
+                To-Do
               </button>
-              <button className="bg-white w-full text-black text-lg py-3 rounded-2xl transition hover:scale-105">
+              <button
+                className={`${
+                  filter === "completed"
+                    ? "bg-indigo-700 font-bold text-white"
+                    : "bg-white text-black"
+                } w-full  rounded-2xl py-3 text-lg transition hover:scale-105`}
+                onClick={filterCompleted}
+              >
                 Completed
               </button>
             </div>
           </div>
-          <div className="w-full h-[350px] p-4 bg-white rounded-3xl flex flex-col">
-            <div className="flex justify-evenly items-center border-b-4 pb-2">
-              <span className="w-28 font-semibold text-xl text-center">
-                Task
-              </span>
-              <span className="w-52 font-semibold text-xl text-center">
-                Description
-              </span>
-              <span className="w-24 font-semibold text-xl text-center">
-                Category
-              </span>
-              <span className="w-28 font-semibold text-xl text-center">
-                When
-              </span>
-              <span className="w-16 font-semibold text-xl text-center">
-                Priority
-              </span>
-              <span className="w-28 font-semibold text-xl text-center">
-                Fullfilment
-              </span>
-              <span className="w-16 font-semibold text-xl text-center"></span>
-            </div>
-            <div className="h-full w-full overflow-y-scroll my-2">
-              {todoItems.map((item) => {
-                return <Todo key={item.id} {...item} />;
-              })}
-            </div>
-          </div>
+          <TodoList
+            todoItems={todoItems}
+            removeTodo={removeTodo}
+            updateTodo={updateTodo}
+          />
         </section>
       </div>
     </div>

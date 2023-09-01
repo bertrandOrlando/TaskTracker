@@ -7,6 +7,13 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        text: "#082b13",
+        background: "#f6dbee",
+        primary: "#37177d",
+        secondary: "#cbf6d9",
+        accent: "#cf5b26",
+      },
       gradientColorStops: {
         homeBg: ["#517FF6", "#253663"],
       },
@@ -17,5 +24,4 @@ module.exports = {
       },
     },
   },
-  plugins: ["prettier-plugin-tailwindcss"],
 };
