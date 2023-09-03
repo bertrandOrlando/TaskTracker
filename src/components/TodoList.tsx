@@ -4,7 +4,7 @@ const TodoList = (
   props: { todoItems: TodoItem[] } & {
     removeTodo: (id: number) => Promise<void>;
   } & {
-    updateTodo: (id: number, todoData: bodyTodoItem) => Promise<void>;
+    updateTodo: (id: number) => void;
   },
 ) => {
   const { todoItems, removeTodo, updateTodo } = props;
