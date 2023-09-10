@@ -121,7 +121,7 @@ export default async function handler(
         todoData.category &&
         todoData.time &&
         todoData.priority &&
-        todoData.fulfillment > -1
+        typeof todoData.fulfillment === "number"
       ) {
         connection.query(
           `INSERT INTO to_do (Task,Description,Category,Time,Priority,Fulfillment) VALUES ("${todoData.task}", "${todoData.description}", "${todoData.category}", "${todoData.time}", "${todoData.priority}", ${todoData.fulfillment});`,

@@ -25,7 +25,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     });
   } else if (req.method === "PUT") {
     const todoId = req.query.id;
-    console.log(req.body);
     const { task, description, category, time, priority, fulfillment } =
       req.body as bodyTodoItem;
     connection.query(
