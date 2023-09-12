@@ -2,16 +2,14 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { useFormsValidation } from "@/hooks/useFormsValidation";
 
-const AddTodo = (props: TodoItem) => {
-  const { id, category, description, fulfillment, priority, task, time } =
-    props;
+const AddTodo = () => {
   const router = useRouter();
 
   const addTodo = async () => {
     const todoData = formik.values;
     try {
       await axios.post("http://localhost:3000/api/todos", todoData);
-      router.push("/");
+      router.push("/my-todos");
     } catch (error) {
       console.log(error);
     }
