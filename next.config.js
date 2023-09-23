@@ -11,6 +11,12 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+        port: "",
+        pathname: "/u/**",
+      },
+      {
+        protocol: "https",
         hostname: "ik.imagekit.io",
         port: "",
         pathname: "/75bfsfl5j/TodoList_Nextjs/**",

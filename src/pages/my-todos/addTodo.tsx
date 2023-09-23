@@ -1,12 +1,20 @@
 import { useRouter } from "next/router";
 import axios from "axios";
 import { useFormsValidation } from "@/hooks/useFormsValidation";
+import { useSession } from "next-auth/react";
 
 const AddTodo = () => {
   const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/");
+    },
+  });
 
   const addTodo = async () => {
-    const todoData = formik.values;
+    // @ts-ignore
+    const todoData = { ...formik.values, user_id: session?.user?.id };
     try {
       await axios.post("http://localhost:3000/api/todos", todoData);
       router.push("/my-todos");

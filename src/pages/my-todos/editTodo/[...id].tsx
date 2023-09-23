@@ -1,23 +1,36 @@
 import { useTodoContext } from "@/context/TodoContext";
 import { useFormsValidation } from "@/hooks/useFormsValidation";
 import axios from "axios";
-import { useRouter } from "next/router";
-import React from "react";
+import { useSession } from "next-auth/react";
+import { Router, useRouter } from "next/router";
+import React, { useEffect } from "react";
 
 const EditTodoById = () => {
   const router = useRouter();
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      router.push("/");
+    },
+  });
   const todoId = router.query.id as string[];
   const { todos } = useTodoContext();
+  useEffect(() => {
+    if (todos.length == 0) {
+      router.push("/my-todos");
+    }
+  }, [todos, router]);
+  console.log(todos);
   const dataById = todos.find(
     (todo) => todo.id === parseInt(todoId[0]),
   ) as TodoItem;
   const initialValue: bodyTodoItem = {
-    task: dataById.task,
-    description: dataById.description,
-    category: dataById.category,
-    time: dataById.time.substring(0, 10),
-    priority: dataById.priority,
-    fulfillment: dataById.fulfillment,
+    task: dataById?.task,
+    description: dataById?.description,
+    category: dataById?.category,
+    time: dataById?.time.substring(0, 10),
+    priority: dataById?.priority,
+    fulfillment: dataById?.fulfillment,
   };
 
   const updateTodo = async () => {

@@ -4,18 +4,21 @@ import Link from "next/link";
 import TodoList from "@/components/TodoList";
 import { useTodoContext } from "@/context/TodoContext";
 import { GetServerSideProps } from "next";
-import {
-  useSession,
-  signOut,
-  getSession,
-  getCsrfToken,
-  getProviders,
-} from "next-auth/react";
+import { useSession, signOut, getProviders } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { authOptions } from "../api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
 
-export default function Home({ data }: { data: TodoItem[] }) {
+export default function Home({
+  data,
+  cookie,
+}: {
+  data: TodoItem[];
+  cookie: string;
+}) {
   const router = useRouter();
+  console.log(cookie);
 
   const { data: session, status } = useSession({
     required: true,
@@ -24,18 +27,11 @@ export default function Home({ data }: { data: TodoItem[] }) {
     },
   });
 
-  async function myFunction() {
-    const providers = await getProviders();
-    // console.log("Providers", providers);
-    // console.log(providers);
-  }
-
   const { todos, setTodos } = useTodoContext();
   const [filter, setFilter] = useState("all");
   const [signoutToggle, setSignoutToggle] = useState(false);
   useEffect(() => {
     setTodos(data);
-    myFunction();
   }, [data, setTodos]);
 
   const filterAll = async () => {
@@ -122,7 +118,7 @@ export default function Home({ data }: { data: TodoItem[] }) {
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  stroke-width="3"
+                  strokeWidth="3"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
@@ -196,6 +192,7 @@ export default function Home({ data }: { data: TodoItem[] }) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // const session = await getServerSession(context.req, context.res, authOptions);
+  // console.log(session);
   // if (!session) {
   //   return {
   //     redirect: {
@@ -205,11 +202,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   //   };
   // }
   const data = await axios
-    .get("http://localhost:3000/api/todos")
+    .get("http://localhost:3000/api/todos", {
+      withCredentials: true,
+      headers: {
+        Cookie: context.req.headers.cookie,
+      },
+    })
     .then((response) => response.data);
   return {
     props: {
       data,
+      cookie: context.req.headers.cookie,
     },
   };
 };
