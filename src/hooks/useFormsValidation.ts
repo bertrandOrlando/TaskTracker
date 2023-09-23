@@ -3,7 +3,6 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 export const useFormsValidation = (
   addTodo: () => Promise<void>,
-  // @ts-ignore
   initialValue: bodyTodoItem = {
     task: "",
     description: "",

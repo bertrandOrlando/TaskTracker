@@ -36,7 +36,6 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const session = await getSession({ req });
-  console.log(session);
   // @ts-ignore
   const userID = session?.user?.id;
   try {
@@ -46,7 +45,6 @@ export default async function handler(
           const todos = await sql<
             TodoItem[]
           >`SELECT * FROM to_dos WHERE user_id = ${userID} ORDER BY priority ASC`;
-          console.log(todos);
           res.status(200).json(todos);
           // connection.query(
           //   "SELECT * from to_do ORDER BY priority ASC",
@@ -62,7 +60,6 @@ export default async function handler(
           const todos = await sql<
             TodoItem[]
           >`SELECT * FROM to_dos WHERE user_id = ${userID} ORDER BY priority DESC`;
-          console.log(todos);
           res.status(200).json(todos);
           // connection.query(
           //   "SELECT * from to_do ORDER BY priority DESC",
@@ -80,7 +77,6 @@ export default async function handler(
           const todos = await sql<
             TodoItem[]
           >`SELECT * FROM to_dos WHERE user_id = ${userID} ORDER BY time ASC`;
-          console.log(todos);
           res.status(200).json(todos);
           // connection.query(
           //   "SELECT * from to_do ORDER BY time ASC",
@@ -96,7 +92,6 @@ export default async function handler(
           const todos = await sql<
             TodoItem[]
           >`SELECT * FROM to_dos WHERE user_id = ${userID} ORDER BY time DESC`;
-          console.log(todos);
           res.status(200).json(todos);
           // connection.query(
           //   "SELECT * from to_do ORDER BY time DESC",
@@ -113,7 +108,6 @@ export default async function handler(
         const todos = await sql<
           TodoItem[]
         >`SELECT * FROM to_dos WHERE user_id = ${userID} AND fulfillment = 100`;
-        console.log(todos);
         res.status(200).json(todos);
         // connection.query(
         //   "SELECT * from to_do WHERE fulfillment = 100",
@@ -129,7 +123,6 @@ export default async function handler(
         const todos = await sql<
           TodoItem[]
         >`SELECT * FROM to_dos WHERE user_id = ${userID} AND fulfillment != 100`;
-        console.log(todos);
         res.status(200).json(todos);
         // connection.query(
         //   "SELECT * from to_do WHERE fulfillment != 100",
@@ -145,7 +138,6 @@ export default async function handler(
         const todos = await sql<
           TodoItem[]
         >`SELECT * FROM to_dos WHERE user_id = ${userID}`;
-        // console.log(todos);
         res.status(200).json(todos);
         // connection.query("SELECT * from to_do;", (_err, rows) => {
         //   if (_err) {
@@ -156,7 +148,7 @@ export default async function handler(
         // });
       }
     } else if (req.method === "POST") {
-      const todoData = req.body as bodyTodoItem;
+      const todoData = req.body as AddTodo;
       if (
         todoData.task &&
         todoData.description &&

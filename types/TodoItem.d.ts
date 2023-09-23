@@ -2,6 +2,10 @@ type TodoItem = {
   id: number;
 } & bodyTodoItem;
 
+type AddTodo = {
+  user_id: string;
+} & bodyTodoItem;
+
 type bodyTodoItem = {
   task: string;
   description: string;
@@ -9,5 +13,4 @@ type bodyTodoItem = {
   time: string;
   priority: string;
   fulfillment: number;
-  user_id: string;
 };

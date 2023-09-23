@@ -7,18 +7,9 @@ import { GetServerSideProps } from "next";
 import { useSession, signOut, getProviders } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { authOptions } from "../api/auth/[...nextauth]";
-import { getServerSession } from "next-auth/next";
 
-export default function Home({
-  data,
-  cookie,
-}: {
-  data: TodoItem[];
-  cookie: string;
-}) {
+export default function Home({ data }: { data: TodoItem[] }) {
   const router = useRouter();
-  console.log(cookie);
 
   const { data: session, status } = useSession({
     required: true,
@@ -37,7 +28,7 @@ export default function Home({
   const filterAll = async () => {
     setFilter("all");
     const data = await axios
-      .get(`http://localhost:3000/api/todos`)
+      .get(`http://localhost:3000/api/todos?sort_by=time&sort=-1`)
       .then((response) => response.data);
     setTodos(data);
   };
@@ -107,7 +98,6 @@ export default function Home({
                 className={`m-2 flex items-center justify-center gap-2 rounded-xl bg-primary bg-opacity-90 px-4 py-2 text-white transition hover:scale-105 `}
                 onClick={() => {
                   signOut({ callbackUrl: "/" });
-                  // router.push("/");
                 }}
               >
                 <h3>SignOut</h3>
@@ -191,18 +181,8 @@ export default function Home({
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  // const session = await getServerSession(context.req, context.res, authOptions);
-  // console.log(session);
-  // if (!session) {
-  //   return {
-  //     redirect: {
-  //       destination: "/login",
-  //       permanent: false,
-  //     },
-  //   };
-  // }
   const data = await axios
-    .get("http://localhost:3000/api/todos", {
+    .get("http://localhost:3000/api/todos?sort_by=time&sort=-1", {
       withCredentials: true,
       headers: {
         Cookie: context.req.headers.cookie,

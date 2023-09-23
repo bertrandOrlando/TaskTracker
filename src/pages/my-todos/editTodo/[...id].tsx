@@ -20,7 +20,6 @@ const EditTodoById = () => {
       router.push("/my-todos");
     }
   }, [todos, router]);
-  console.log(todos);
   const dataById = todos.find(
     (todo) => todo.id === parseInt(todoId[0]),
   ) as TodoItem;

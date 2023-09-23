@@ -16,7 +16,6 @@ export default async function handler(
     const todos = await sql<
       TodoItem[]
     >`SELECT * FROM to_dos WHERE user_id = ${userID} AND id = ${todoID}`;
-    console.log(todos);
     res.status(200).json(todos);
 
     // connection.query(
