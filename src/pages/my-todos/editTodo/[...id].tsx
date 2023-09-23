@@ -36,7 +36,7 @@ const EditTodoById = () => {
     const todoData = formik.values;
     try {
       await axios.put(`http://localhost:3000/api/todos/${todoId}`, todoData);
-      router.push("/");
+      router.push("/my-todos");
     } catch (error) {
       console.log(error);
     }
