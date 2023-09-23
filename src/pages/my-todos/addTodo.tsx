@@ -16,7 +16,7 @@ const AddTodo = () => {
     // @ts-ignore
     const todoData = { ...formik.values, user_id: session?.user?.id };
     try {
-      await axios.post(`api/todos`, todoData);
+      await axios.post(`/api/todos`, todoData);
       router.push("/my-todos");
     } catch (error) {
       console.log(error);
