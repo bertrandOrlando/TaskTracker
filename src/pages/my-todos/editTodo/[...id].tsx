@@ -35,10 +35,7 @@ const EditTodoById = () => {
   const updateTodo = async () => {
     const todoData = formik.values;
     try {
-      await axios.put(
-        `${process.env.NEXTAUTH_URL}/api/todos/${todoId}`,
-        todoData,
-      );
+      await axios.put(`api/todos/${todoId}`, todoData);
       router.push("/my-todos");
     } catch (error) {
       console.log(error);
