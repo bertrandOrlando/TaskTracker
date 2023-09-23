@@ -28,26 +28,26 @@ export default function Home({ data }: { data: TodoItem[] }) {
   const filterAll = async () => {
     setFilter("all");
     const data = await axios
-      .get(`http://localhost:3000/api/todos?sort_by=time&sort=-1`)
+      .get(`${process.env.NEXTAUTH_URL}/api/todos?sort_by=time&sort=-1`)
       .then((response) => response.data);
     setTodos(data);
   };
   const filterTodo = async () => {
     setFilter("todo");
     const data = await axios
-      .get(`http://localhost:3000/api/todos?filter=todo`)
+      .get(`${process.env.NEXTAUTH_URL}/api/todos?filter=todo`)
       .then((response) => response.data);
     setTodos(data);
   };
   const filterCompleted = async () => {
     setFilter("completed");
     const data = await axios
-      .get(`http://localhost:3000/api/todos?filter=completed`)
+      .get(`${process.env.NEXTAUTH_URL}/api/todos?filter=completed`)
       .then((response) => response.data);
     setTodos(data);
   };
   const removeTodo = async (id: number) => {
-    await axios.delete(`http://localhost:3000/api/todos/${id}`);
+    await axios.delete(`${process.env.NEXTAUTH_URL}/api/todos/${id}`);
     renderTodo();
   };
   const updateTodo = (id: number) => {
@@ -182,7 +182,7 @@ export default function Home({ data }: { data: TodoItem[] }) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const data = await axios
-    .get("http://localhost:3000/api/todos?sort_by=time&sort=-1", {
+    .get(`${process.env.NEXTAUTH_URL}/api/todos?sort_by=time&sort=-1`, {
       withCredentials: true,
       headers: {
         Cookie: context.req.headers.cookie,
